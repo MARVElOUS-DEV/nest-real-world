@@ -1,0 +1,31 @@
+version: '3.3'
+services:
+  nest-real-world:
+    container_name: real-world
+    build:
+      context: .
+      dockerfile: "./build/Dockerfile"
+    ports:
+      - 9000:9000
+    depends_on:
+      - mysql5.7
+    environment:
+      - DBHOST=mysql5.7
+  mysql5.7:
+    image: mysql:5.7
+    container_name: mysql5.7
+    ports:
+      - 4406:3306
+    environment:
+      - MYSQL_DATABASE=nestjsrealWorld
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./mysql5.7/conf.d:/etc/mysql/conf.d:ro
+      - ./mysql5.7/data:/var/lib/mysql
+      - ./mysql5.7/logs:/var/log/mysql:rw
+      # - ./mysql5.7/initdb.d:/docker-entrypoint-initdb.d:ro
+      - ./mysql5.7/common:/common:ro
+      - ./mysql5.7/auto-generate:/auto-generate:rw
